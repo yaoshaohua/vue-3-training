@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../shared/src/index.ts", "../src/reactive.ts"],
+  "sourcesContent": ["export function isObject(value: any) {\n\treturn typeof value === 'object' &&  value !== null\n}\n", "import { isObject } from \"@vue/shared\"\n\nconst proxyMap = new WeakMap()\nenum ReactiveFlags {\n  IS_REACTIVE = '__v_isReactive'\n}\n\nconst handler: ProxyHandler<any> = {\n  get(target, prop, receiver) {\n    if (prop === ReactiveFlags.IS_REACTIVE) return true\n    return Reflect.get\n  }\n}\n\nfunction createReactive(target: any) {\n  if (!isObject(target)) return\n\n  if (target[ReactiveFlags.IS_REACTIVE]) return target\n\n  const existProxy = proxyMap.get(target)\n  if (existProxy) return existProxy\n\n  const proxyTarget = new Proxy(target, handler)\n  proxyMap.set(target, proxyTarget)\n  return proxyTarget\n}\n\nexport function reactive(target: any) {\n  return createReactive(target)\n}\n"],
+  "mappings": ";AAAO,SAAS,SAAS,OAAY;AACpC,SAAO,OAAO,UAAU,YAAa,UAAU;AAChD;;;ACAA,IAAM,WAAW,oBAAI,QAAQ;AAK7B,IAAM,UAA6B;AAAA,EACjC,IAAI,QAAQ,MAAM,UAAU;AAC1B,QAAI,SAAS,mCAA2B,QAAO;AAC/C,WAAO,QAAQ;AAAA,EACjB;AACF;AAEA,SAAS,eAAe,QAAa;AACnC,MAAI,CAAC,SAAS,MAAM,EAAG;AAEvB,MAAI,OAAO,kCAAyB,EAAG,QAAO;AAE9C,QAAM,aAAa,SAAS,IAAI,MAAM;AACtC,MAAI,WAAY,QAAO;AAEvB,QAAM,cAAc,IAAI,MAAM,QAAQ,OAAO;AAC7C,WAAS,IAAI,QAAQ,WAAW;AAChC,SAAO;AACT;AAEO,SAAS,SAAS,QAAa;AACpC,SAAO,eAAe,MAAM;AAC9B;",
+  "names": []
+}
